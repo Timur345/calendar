@@ -1,0 +1,49 @@
+body {
+	height: 100vh;
+	margin: 0;
+	padding: 0 1em;
+	overflow: hidden;
+
+	font-family: Arial, Helvetica, sans-serif;
+	color: #3c4043;
+	text-align: center;
+
+	display: grid;
+	place-content: center center;
+	gap: 2rem;
+}
+
+.calendar {
+	border-collapse: collapse;
+	width: 40vw;
+	aspect-ratio: 16/9;
+}
+
+.calendar td,
+.calendar th {
+	padding: 1em;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.calendar th{
+	color: #70757a;
+	text-transform: capitalize;
+}
+
+.clock {
+	font-size: 4rem;
+}
+
+@media (max-width: 992px){
+	.calendar{
+		width: 70vw;
+	}
+}
+
+
+@media (max-width: 400px){
+	:root{
+		font-size: 13px;
+	}
+}
