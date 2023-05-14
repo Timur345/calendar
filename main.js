@@ -1,5 +1,5 @@
 const clock = document.getElementById("clock");
-
+let today = new Date();
 
 setInterval( () => {
 	let now = new Date();
@@ -12,11 +12,11 @@ setInterval( () => {
 
 let dayOfMonth = 1;
 
-createCalendar(document.body, 2023, 4);
+createCalendar(document.body, today.getFullYear(), today.getMonth());
 
 
 function createCalendar(elem, year, m) {
-	let month = new Date(year, m - 1);
+	let month = new Date(year, m);
 	let table = document.createElement("table");
 	table.className = "calendar";
 
@@ -43,6 +43,7 @@ function createTheader(row) {
 
 	for (let day of week) {
 		let th = document.createElement("th");
+		th.className = "day";
 		th.textContent = day;
 		row.append(th);
 	}
@@ -62,6 +63,8 @@ function createCells(date, row, rowIndex) {
 		row.append(cell);
 
 		if (beforeFirstDay || afterLastDay) continue;
+		cell.className = "date";
+		if ( dayOfMonth === today.getDate() ) cell.classList.add("current");
 		cell.textContent = dayOfMonth++;
 	}
 }

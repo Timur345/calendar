@@ -1,3 +1,7 @@
+:root {
+	--text-cl: #3c4043;
+}
+
 body {
 	height: 100vh;
 	margin: 0;
@@ -5,7 +9,7 @@ body {
 	overflow: hidden;
 
 	font-family: Arial, Helvetica, sans-serif;
-	color: #3c4043;
+	color: var(--text-cl);
 	text-align: center;
 
 	display: grid;
@@ -19,14 +23,38 @@ body {
 	aspect-ratio: 16/9;
 }
 
-.calendar td,
-.calendar th {
+.date,
+.day {
 	padding: 1em;
 	text-align: center;
 	vertical-align: middle;
 }
 
-.calendar th{
+.date::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 2.5em;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	background-color: #ddd;
+	z-index: -1;
+	opacity: 0;
+	transition: .1s linear;
+}
+
+.current {
+	color: #fff;
+}
+
+.current::before {
+	opacity: 1;
+	background-color: var(--text-cl);
+}
+
+.day {
 	color: #70757a;
 	text-transform: capitalize;
 }
@@ -35,15 +63,30 @@ body {
 	font-size: 4rem;
 }
 
-@media (max-width: 992px){
-	.calendar{
+@media (min-width: 992px) {
+	.date {
+		cursor: pointer;
+		position: relative;
+	}
+
+	.date:hover::before {
+		opacity: 1;
+	}
+
+	.current:hover::before {
+		background-color: #222;
+	}
+}
+
+@media (max-width: 992px) {
+	.calendar {
 		width: 70vw;
 	}
 }
 
 
-@media (max-width: 400px){
-	:root{
+@media (max-width: 400px) {
+	:root {
 		font-size: 13px;
 	}
 }
