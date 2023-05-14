@@ -2,6 +2,10 @@
 	--text-cl: #3c4043;
 }
 
+::selection {
+	display: none;
+}
+
 body {
 	height: 100vh;
 	margin: 0;
