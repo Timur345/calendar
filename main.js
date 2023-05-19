@@ -19,6 +19,7 @@ function createCalendar(elem, year, m) {
 	let month = new Date(year, m);
 	let table = document.createElement("table");
 	table.className = "calendar";
+	elem.append(table);
 
 
 	for (let rowIndex = 0; rowIndex < 6; rowIndex++) {
@@ -32,9 +33,6 @@ function createCalendar(elem, year, m) {
 			createCells(month, row, rowIndex);
 		}
 	}
-
-
-	elem.append(table);
 }
 
 
@@ -66,5 +64,51 @@ function createCells(date, row, rowIndex) {
 		cell.className = "date";
 		if ( dayOfMonth === today.getDate() ) cell.classList.add("current");
 		cell.textContent = dayOfMonth++;
+	}
+}
+
+document.addEventListener("click", handleClick);
+
+function handleClick(e) {
+	if (!e.target.matches(".date")) return;
+
+	document.querySelector(".active")?.classList.remove("active");
+	e.target.classList.add("active");
+
+	createNoteBlock(e.target);
+}
+
+
+
+
+function createNoteBlock(parent) {
+	let dragNote = false;
+	let mouseX;
+	let mouseY;
+
+	document.querySelector(".note")?.remove();
+
+	let noteBlock = document.createElement("textarea");
+	noteBlock.className = "note";
+	let coords = parent.getBoundingClientRect();
+	document.body.append(noteBlock);
+
+	noteBlock.style.setProperty("top", `${coords.top}px`);
+	noteBlock.style.setProperty("left", `${coords.right}px`);
+
+	noteBlock.addEventListener("mousedown", (e) => {
+		dragNote = true;
+		mouseX = e.clientX - noteBlock.offsetLeft;
+		mouseY = e.clientY - noteBlock.offsetTop;
+	});
+	noteBlock.addEventListener("mousemove", translateNote);
+	noteBlock.addEventListener("mouseup", () => dragNote = false);
+
+	function translateNote(e) {
+		if (!dragNote) return;
+
+		noteBlock.style.top = e.clientY - mouseY + "px";
+		noteBlock.style.left = e.clientX - mouseX + "px";
+		
 	}
 }

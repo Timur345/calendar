@@ -2,6 +2,10 @@
 	--text-cl: #3c4043;
 }
 
+textarea:focus {
+	outline: none;
+}
+
 ::selection {
 	display: none;
 }
@@ -47,18 +51,20 @@ body {
 	width: 2.5em;
 	aspect-ratio: 1;
 	border-radius: 50%;
-	background-color: #ddd;
+	background-color: #fff;
 	z-index: -1;
-	opacity: 0;
 	transition: .1s linear;
 }
 
-.current {
+.date.active::before {
+	border: 2px solid var(--text-cl);
+}
+
+.date.current {
 	color: #fff;
 }
 
-.current::before {
-	opacity: 1;
+.date.current::before {
 	background-color: var(--text-cl);
 }
 
@@ -71,13 +77,32 @@ body {
 	font-size: 4rem;
 }
 
+.note {
+	color: inherit;
+	font-family: cursive;
+	border-radius: 0.8em;
+	padding: 1em;
+	border: none;
+	position: absolute;
+	resize: none;
+	border: 2px solid var(--text-cl);
+	min-height: 10em;
+	min-width: 15em;
+	font-size: 1.5em;
+}
+
+.note::selection {
+	background-color: var(--text-cl);
+	color: #fff;
+}
+
 @media (min-width: 992px) {
 	.date {
 		cursor: pointer;
 	}
 
 	.date:hover::before {
-		opacity: 1;
+		background-color: #ddd;
 	}
 
 	.current:hover::before {
