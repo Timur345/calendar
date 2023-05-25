@@ -25,6 +25,25 @@ body {
 	gap: 2rem;
 }
 
+.main {
+	display: flex;
+	align-items: center;
+}
+
+.arrow {
+	font-size: 3rem;
+	font-weight: 700;
+	color: inherit;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+	transition: .3s;
+}
+
+.arrow:hover {
+	opacity: .8;
+}
+
 .calendar {
 	border-collapse: collapse;
 	width: 40vw;
@@ -73,8 +92,14 @@ body {
 	text-transform: capitalize;
 }
 
+.calendar caption {
+	font-size: 1.75rem;
+	margin-bottom: .25em;
+}
+
 .clock {
 	font-size: 4rem;
+	line-height: .5;
 }
 
 .note {

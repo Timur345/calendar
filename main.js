@@ -1,7 +1,12 @@
 const clock = document.getElementById("clock");
-let today = new Date();
+const main = document.querySelector(".main")
+const next = document.getElementById("arrow-next");
+const prev = document.getElementById("arrow-prev");
+const months = ["January", "February", "March", "April", "May", "June", "July", "Augest", "September", "October", "November", "December"]
+const today = new Date();
+let currentMonth = today.getMonth();
 
-setInterval( () => {
+setInterval(() => {
 	let now = new Date();
 	let hours = now.getHours() < 10 ? "0" + now.getHours() : now.getHours();
 	let minutes = now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes();
@@ -12,17 +17,18 @@ setInterval( () => {
 
 let dayOfMonth = 1;
 
-createCalendar(document.body, today.getFullYear(), today.getMonth());
+createCalendar(main, today.getFullYear(), today.getMonth());
 
 
 function createCalendar(elem, year, m) {
 	let month = new Date(year, m);
 	let table = document.createElement("table");
 	table.className = "calendar";
-	elem.append(table);
+	elem.insertBefore(table, next);
 
+	createCaption(table, month);
 
-	for (let rowIndex = 0; rowIndex < 6; rowIndex++) {
+	for (let rowIndex = 0; rowIndex < 7; rowIndex++) {
 		let row = document.createElement("tr");
 		table.append(row);
 
@@ -33,6 +39,18 @@ function createCalendar(elem, year, m) {
 			createCells(month, row, rowIndex);
 		}
 	}
+
+	dayOfMonth = 1;
+}
+
+function createCaption(table, month) {
+	let caption = document.createElement("caption");
+	
+	const captionYear = month.getFullYear();
+	const captionMonth = months[month.getMonth()];
+
+	caption.textContent = ` ${captionMonth} ${captionYear}`
+	table.append(caption)
 }
 
 
@@ -51,6 +69,7 @@ function createTheader(row) {
 function createCells(date, row, rowIndex) {
 	let firstDay = date.getDay() == 0 ? 6 : date.getDay() - 1;
 	let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+	let isCurrentMonth = currentMonth === today.getMonth();
 
 
 	for (let cellIndex = 0; cellIndex < 7; cellIndex++) {
@@ -62,7 +81,7 @@ function createCells(date, row, rowIndex) {
 
 		if (beforeFirstDay || afterLastDay) continue;
 		cell.className = "date";
-		if ( dayOfMonth === today.getDate() ) cell.classList.add("current");
+		if (dayOfMonth === today.getDate() && isCurrentMonth) cell.classList.add("current");
 		cell.textContent = dayOfMonth++;
 	}
 }
@@ -79,10 +98,9 @@ function handleClick(e) {
 }
 
 
-
-
 function createNoteBlock(parent) {
-	let dragNote = false;
+	let isDown = false;
+	let isMoving = false;
 	let mouseX;
 	let mouseY;
 
@@ -95,20 +113,59 @@ function createNoteBlock(parent) {
 
 	noteBlock.style.setProperty("top", `${coords.top}px`);
 	noteBlock.style.setProperty("left", `${coords.right}px`);
+	noteBlock.focus();
 
 	noteBlock.addEventListener("mousedown", (e) => {
-		dragNote = true;
+
 		mouseX = e.clientX - noteBlock.offsetLeft;
 		mouseY = e.clientY - noteBlock.offsetTop;
+
+		let dontMove = mouseX > 20 && mouseY > 20 && mouseX < noteBlock.offsetWidth - 20 && mouseY < noteBlock.offsetHeight - 20;
+
+		if (!dontMove) {
+			isDown = true;
+		}
 	});
 	noteBlock.addEventListener("mousemove", translateNote);
-	noteBlock.addEventListener("mouseup", () => dragNote = false);
+	noteBlock.addEventListener("mouseup", () => {
+		
+		isDown = false; 
+		isMoving = false
+	});
 
 	function translateNote(e) {
-		if (!dragNote) return;
+		const x = e.clientX - noteBlock.offsetLeft;
+		const y = e.clientY - noteBlock.offsetTop;
+		const dontMove = x > 20 && y > 20 && x < noteBlock.offsetWidth - 20 && y < noteBlock.offsetHeight - 20;
+
+		if (dontMove && !isMoving) {
+			noteBlock.style.cursor = "text";
+			return;
+		};
+
+		noteBlock.style.cursor = "move";
+
+		if (!isDown) return;
 
 		noteBlock.style.top = e.clientY - mouseY + "px";
 		noteBlock.style.left = e.clientX - mouseX + "px";
-		
+
+		isMoving = true;
 	}
+}
+
+
+next.onclick = nextMonth;
+prev.onclick = prevMonth;
+
+function nextMonth() {
+	currentMonth++;
+	document.querySelector(".calendar").remove()
+	createCalendar(main, new Date().getFullYear(), currentMonth);
+}
+
+function prevMonth() {
+	currentMonth--;
+	document.querySelector(".calendar").remove();
+	createCalendar(main, new Date().getFullYear(), currentMonth);
 }
